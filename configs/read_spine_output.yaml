@@ -1,0 +1,32 @@
+# Read a FULL SPINE output file (.h5) and rebuild the particle/interaction
+# objects -- no neural network, no GPU needed.
+#
+# Usage (terminal):   spine -c read_spine_output.yaml -s my_output.h5 -n 5
+# Usage (python):     see 02_analysis/02b_analyze_spine_output.ipynb
+
+__meta__:
+  kind: bundle
+  description: "Tutorial: read full SPINE HDF5 output and rebuild objects"
+
+base:
+  world_size: 0        # 0 = CPU only. Reading files never needs a GPU.
+  iterations: -1       # -1 = loop over every entry in the file(s)
+  seed: 0
+  log_step: 100
+  overwrite_log: true  # re-running is fine: replace the previous spine_log.csv
+
+io:
+  reader:
+    provider: hdf5
+    file_keys:         # left empty on purpose: pass the file with -s / --source
+
+# `build` turns the flat arrays stored in the file back into Python objects
+# (RecoParticle, TruthParticle, RecoInteraction, TruthInteraction) and
+# reconnects each object with its voxels. mode: both -> reco AND truth, and
+# the reco<->truth match pairs (e.g. `interaction_matches_t2r`).
+build:
+  mode: both
+  units: cm
+  fragments: false
+  particles: true
+  interactions: true

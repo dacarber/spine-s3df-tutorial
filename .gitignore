@@ -1,0 +1,15 @@
+# tutorial working data (when run off S3DF)
+work/
+runs/
+experiments/
+# big physics files: never commit these
+*.root
+*.h5
+*.ckpt
+*.sif
+# Python / Jupyter clutter
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+# macOS
+.DS_Store

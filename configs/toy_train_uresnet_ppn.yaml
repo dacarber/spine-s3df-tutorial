@@ -1,0 +1,25 @@
+# A SHORT version of the official generic UResNet+PPN training recipe,
+# for learning purposes. It trains for 200 iterations and saves a checkpoint
+# every 50 iterations. The real recipe trains for 50 epochs (days of GPU time).
+#
+# Usage (inside the container, on a GPU node):
+#   spine -c toy_train_uresnet_ppn.yaml -s TRAIN.root --val-source TEST.root \
+#         --weight-prefix $RUN/weights/snapshot --log-dir $RUN
+
+__meta__:
+  kind: bundle
+  version: "240805"
+  date: "2024-08-05"
+  description: "Tutorial: 200-iteration toy UResNet-PPN training (generic)"
+
+include: train/generic/uresnet_ppn/train_240805.yaml
+
+override:
+  base.iterations: 200          # train for a fixed number of iterations...
+  train.save_step: 50           # ...and checkpoint every 50 of them
+  io.loader.batch_size: 16      # small batches fit any GPU
+  io.loader.num_workers: 4      # data-loading CPU processes
+
+remove:
+  - base.epochs                 # epochs and iterations are mutually exclusive
+  - train.save_epoch            # save_epoch and save_step are mutually exclusive

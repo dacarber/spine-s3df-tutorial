@@ -1,0 +1,15 @@
+# ProtoDUNE-SP full chain (Sept 2026 weights) + LITE output.
+#
+# Same as
+#   ./submit.py --config infer/protodune-sp/full_chain_260906.yaml --apply-mods lite
+# See generic_full_chain_lite.yaml for an explanation of `include`.
+
+__meta__:
+  kind: bundle
+  version: "260906"
+  date: "2026-09-06"
+  description: "Tutorial: ProtoDUNE-SP full chain 260906 with lite output"
+
+include:
+  - infer/protodune-sp/full_chain_260906.yaml
+  - infer/protodune-sp/modifier/lite/mod_lite_260210.yaml

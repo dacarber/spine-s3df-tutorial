@@ -1,0 +1,25 @@
+# Evaluate (validate) saved UResNet+PPN checkpoints WITHOUT training.
+# The training config is re-used, but the training-only blocks are stripped.
+#
+# Usage:
+#   spine -c uresnet_ppn_validation.yaml -s TEST.root -n 256 \
+#         --weight-path "$RUN/weights/snapshot-[0-9]*.ckpt" --log-dir $RUN/posthoc
+# (quote the pattern so the shell passes it to SPINE untouched)
+
+__meta__:
+  kind: bundle
+  version: "240805"
+  date: "2024-08-05"
+  description: "Tutorial: inference-only evaluation of UResNet-PPN checkpoints"
+
+include: train/generic/uresnet_ppn/train_240805.yaml
+
+override:
+  base.iterations: -1           # go through the whole validation input once
+  io.loader.shuffle: false
+
+remove:
+  - base.epochs
+  - io.loader.sampler           # no random sampling when evaluating
+  - train                       # no `train` block -> SPINE runs inference
+  - validation

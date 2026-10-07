@@ -1,0 +1,23 @@
+# Turn SPINE output (.h5) into CSV tables you can open with pandas/Excel/ROOT.
+#
+# Usage (terminal, CPU is fine):
+#   spine -c ana_save_csv.yaml -s my_output.h5 --log-dir $WORKDIR/ana
+# Writes one CSV per object type into --log-dir:
+#   save_reco_particles.csv, save_truth_particles.csv,
+#   save_reco_interactions.csv, save_truth_interactions.csv
+# Each row also carries the best-matched object's columns (prefixed truth_/reco_).
+# For a LITE input file, add:  --set build.lite=true
+
+__meta__:
+  kind: bundle
+  description: "Tutorial: dump particles and interactions to CSV"
+
+include: read_spine_output.yaml
+
+ana:
+  overwrite: true
+  stages:
+    - name: save
+      obj_type: [particle, interaction]
+      run_mode: both        # write reco AND truth tables
+      match_mode: both      # add the best-matched object's columns to each row

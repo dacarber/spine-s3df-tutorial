@@ -1,0 +1,22 @@
+# Generic full chain (Aug 2024 weights) + LITE output.
+#
+# This is exactly what spine-prod builds for you when you run
+#   ./submit.py --config infer/generic/full_chain_240805.yaml --apply-mods lite
+# but written down so you can use it with the plain `spine` command.
+#
+# How it works: `include` stacks config files on top of each other.
+#   1. the production full-chain bundle (model + weights + post-processing)
+#   2. the "lite" modifier, which sets `io.writer.lite: true` and removes the
+#      heavy voxel-level products (points, depositions, ...) from the writer.
+# Both paths are looked up through $SPINE_CONFIG_PATH (set by spine-prod's
+# configure.sh), so they point inside $SPINE_PROD_BASEDIR/config.
+
+__meta__:
+  kind: bundle
+  version: "240805"
+  date: "2024-08-05"
+  description: "Tutorial: generic full chain 240805 with lite output"
+
+include:
+  - infer/generic/full_chain_240805.yaml
+  - infer/generic/modifier/lite/mod_lite_240718.yaml

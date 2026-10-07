@@ -1,0 +1,11 @@
+# Read a LITE SPINE output file. Lite files do not store voxels, so the
+# builder must be told not to look for them (`build.lite: true`).
+
+__meta__:
+  kind: bundle
+  description: "Tutorial: read lite SPINE HDF5 output"
+
+include: read_spine_output.yaml
+
+override:
+  build.lite: true
