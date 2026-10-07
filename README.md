@@ -43,7 +43,7 @@ spine_s3df_tutorial/
 
 | Piece | Version | Where |
 |---|---|---|
-| **spine-prod** (production scripts and configs) | commit `cc682a6` (Oct 2026, "Migrate … to SPINE 1.4.0") | https://github.com/DeepLearnPhysics/spine-prod |
+| **spine-prod** (production scripts and configs) | commit `cc682a6` (Oct 2026, "Migrate … to SPINE 1.4.0") | on S3DF: the **standard installation** `/sdf/data/neutrino/software/spine-prod`, used for all official productions · source: https://github.com/DeepLearnPhysics/spine-prod |
 | **SPINE** (the reconstruction itself) | `1.4.0` | https://github.com/DeepLearnPhysics/spine |
 | **Container** (all software pre-installed) | `spine:1.4.0` | `/sdf/data/neutrino/images/spine_v1-4-0.sif` on S3DF, or `ghcr.io/deeplearnphysics/spine:1.4.0` |
 | Detectors used in examples | `generic` (toy detector) and `protodune-sp` | |
@@ -107,6 +107,7 @@ This tutorial was written and partly tested off-site. These items can only be
 confirmed on S3DF itself. Tick them once, then update the text if anything differs:
 
 - [ ] `/sdf/data/neutrino/images/spine_v1-4-0.sif` exists (otherwise follow "If the container is missing" in Part 0)
+- [ ] the standard `/sdf/data/neutrino/software/spine-prod` is readable by new users; note which commit it is at (`git -C … log --oneline -1`) and whether its `DEFAULT_SPINE_VERSION` still matches the container above
 - [ ] the OnDemand "Custom Apptainer Image" session starts and the notebook kernel imports `spine`, `torch`, `larcv`
 - [ ] `/sdf/scratch/users/<u>/<user>` is the right scratch path for new users
 - [ ] Part 1 notebook runs generic and ProtoDUNE-SP inference on an `ampere` GPU

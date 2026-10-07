@@ -2,6 +2,13 @@
 
 Assumes `source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh` has been run.
 
+**spine-prod on S3DF:** the standard installation `/sdf/data/neutrino/software/spine-prod`
+(= `$SPINE_PROD_BASEDIR`) is used for **all official productions**. Personal clones are for development only.
+```bash
+echo $SPINE_PROD_BASEDIR                                         # which spine-prod am I using?
+git -C /sdf/data/neutrino/software/spine-prod log --oneline -1   # which version is it?
+```
+
 ## Getting around S3DF
 ```bash
 ssh <user>@s3dflogin.slac.stanford.edu     # login node (doorway only)

@@ -147,6 +147,8 @@ spine_container.sh spine -c $SPINE_TUTORIAL/configs/uresnet_ppn_validation.yaml 
 
 Training takes hours to days, so it always runs as a batch job. spine-prod manages a
 **run directory** that keeps checkpoints, logs and job records together across restarts.
+Official trainings, like official inference productions, use the standard S3DF spine-prod at
+`/sdf/data/neutrino/software/spine-prod`, which is where `$SPINE_PROD_BASEDIR` points after `setup_env.sh`.
 From the neutrino node (`ssh neutrino`):
 ```bash
 cd $WORKDIR

@@ -29,6 +29,24 @@ ON_S3DF = Path("/sdf/data/neutrino").exists()
 #: Public web area holding the small example files
 SAMPLE_URL = "https://s3df.slac.stanford.edu/data/neutrino/spine/workshop"
 
+#: Standard spine-prod installation on S3DF, used for all official productions
+OFFICIAL_SPINE_PROD = Path("/sdf/data/neutrino/software/spine-prod")
+
+
+def _default_spine_prod():
+    if OFFICIAL_SPINE_PROD.exists():
+        return OFFICIAL_SPINE_PROD
+    return Path.home() / "spine-prod"
+
+
+def _default_cache_dir(prod_dir, workdir):
+    """spine-prod's weight cache if writable, else a personal one."""
+    prod_cache = Path(prod_dir) / ".cache" / "weights"
+    target = prod_cache if prod_cache.exists() else Path(prod_dir)
+    if target.exists() and os.access(target, os.W_OK):
+        return prod_cache
+    return Path(workdir) / ".cache" / "weights"
+
 
 def _default_workdir():
     if not ON_S3DF:
@@ -44,7 +62,7 @@ def setup(verbose=True):
     """Define the tutorial environment variables (if not already set)."""
     env = os.environ
     env.setdefault("SPINE_TUTORIAL", str(TUTORIAL_DIR))
-    env.setdefault("SPINE_PROD_BASEDIR", str(Path.home() / "spine-prod"))
+    env.setdefault("SPINE_PROD_BASEDIR", str(_default_spine_prod()))
     env.setdefault("WORKDIR", str(_default_workdir()))
     env.setdefault("TUTORIAL_DATA", str(Path(env["WORKDIR"]) / "data"))
     env.setdefault("SPINE_SAMPLE_URL", SAMPLE_URL)
@@ -54,7 +72,8 @@ def setup(verbose=True):
     if "SPINE_CONFIG_PATH" not in env and prod_cfg.exists():
         env["SPINE_CONFIG_PATH"] = str(prod_cfg)
     env.setdefault(
-        "SPINE_CACHE_DIR", str(Path(env["SPINE_PROD_BASEDIR"]) / ".cache" / "weights")
+        "SPINE_CACHE_DIR",
+        str(_default_cache_dir(env["SPINE_PROD_BASEDIR"], env["WORKDIR"])),
     )
     env.setdefault("NUMBA_NUM_THREADS", str(min(os.cpu_count() or 4, 64)))
 

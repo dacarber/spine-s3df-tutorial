@@ -21,8 +21,20 @@
 # Typical neutrino ML repos: neutrino:ml-dev, neutrino:dune-ml, neutrino:icarus-ml
 export SPINE_ACCOUNT=${SPINE_ACCOUNT:-}
 
-# Where you cloned spine-prod (see 00_s3df_basics/README.md, "One-time setup").
-export SPINE_PROD_BASEDIR=${SPINE_PROD_BASEDIR:-$HOME/spine-prod}
+# Which spine-prod to use. By default this is the STANDARD S3DF installation,
+#     /sdf/data/neutrino/software/spine-prod
+# which is what all official productions are run with. Only uncomment the
+# next line if you work on your OWN clone (development / testing changes):
+# export SPINE_PROD_BASEDIR=$HOME/spine-prod
+SPINE_PROD_OFFICIAL=/sdf/data/neutrino/software/spine-prod
+if [[ -z $SPINE_PROD_BASEDIR ]]; then
+    if [[ -d $SPINE_PROD_OFFICIAL ]]; then
+        SPINE_PROD_BASEDIR=$SPINE_PROD_OFFICIAL
+    else
+        SPINE_PROD_BASEDIR=$HOME/spine-prod      # off S3DF: a personal clone
+    fi
+fi
+export SPINE_PROD_BASEDIR
 
 # Only if you had to build your own container (README step 5.5), uncomment
 # and use the FULL path of the .sif file you pulled:
@@ -48,7 +60,8 @@ if [[ -z $SPINE_PROD_CONFIGURED ]]; then
         source "$SPINE_PROD_BASEDIR/configure.sh" > /dev/null
     else
         echo "WARNING: $SPINE_PROD_BASEDIR/configure.sh not found."
-        echo "         Clone spine-prod first (00_s3df_basics/README.md, step 3)"
+        echo "         On S3DF the standard spine-prod is $SPINE_PROD_OFFICIAL;"
+        echo "         elsewhere, clone spine-prod (00_s3df_basics/README.md, step 5.2)"
         echo "         or export SPINE_PROD_BASEDIR=/path/to/spine-prod before sourcing."
     fi
 fi
@@ -74,7 +87,17 @@ export TUTORIAL_DATA=$WORKDIR/data
 mkdir -p "$WORKDIR" "$TUTORIAL_DATA"
 
 # Downloaded model weights are cached here (and re-used by every job).
-export SPINE_CACHE_DIR=${SPINE_CACHE_DIR:-$SPINE_PROD_BASEDIR/.cache/weights}
+# spine-prod's own cache is used when you may write to it; the shared standard
+# installation is usually read-only for users, so then a personal cache is used.
+if [[ -z $SPINE_CACHE_DIR ]]; then
+    PROD_CACHE=$SPINE_PROD_BASEDIR/.cache/weights
+    if [[ -w $PROD_CACHE || ( ! -e $PROD_CACHE && -w $SPINE_PROD_BASEDIR ) ]]; then
+        SPINE_CACHE_DIR=$PROD_CACHE
+    else
+        SPINE_CACHE_DIR=$WORKDIR/.cache/weights
+    fi
+fi
+export SPINE_CACHE_DIR
 
 # numba (used by SPINE post-processing) crashes if it tries to use more
 # threads than allowed. Cap it at the number of cores we have (max 64).
@@ -105,7 +128,11 @@ esac
 if [[ -z $SPINE_TUTORIAL_QUIET ]]; then
     echo "SPINE tutorial environment"
     echo "  SPINE_TUTORIAL       = $SPINE_TUTORIAL"
-    echo "  SPINE_PROD_BASEDIR   = $SPINE_PROD_BASEDIR"
+    if [[ $SPINE_PROD_BASEDIR == "$SPINE_PROD_OFFICIAL" ]]; then
+        echo "  SPINE_PROD_BASEDIR   = $SPINE_PROD_BASEDIR  (standard S3DF install, used for official productions)"
+    else
+        echo "  SPINE_PROD_BASEDIR   = $SPINE_PROD_BASEDIR  (personal copy: NOT for official productions)"
+    fi
     echo "  SPINE_CONTAINER_PATH = ${SPINE_CONTAINER_PATH:-<not set>}"
     echo "  WORKDIR              = $WORKDIR"
     echo "  SPINE_ACCOUNT        = ${SPINE_ACCOUNT:-<NOT SET -- edit setup_env.sh or export it>}"

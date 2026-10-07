@@ -114,18 +114,45 @@ Do this **on the neutrino interactive node** (`ssh neutrino`), in this order.
 
 **5.1 Put this tutorial on S3DF.** For example, copy it from your laptop. Run this on the laptop, from the folder that contains `spine_s3df_tutorial`:
 ```bash
-rsync -av spine_s3df_tutorial jdoe@s3dflogin.slac.stanford.edu:~/
+git clone https://github.com/dacarber/spine-s3df-tutorial.git
 ```
 If it lives in a git repository, `git clone` it into `~` instead.
 
-**5.2 Get spine-prod at the version this tutorial uses:**
+**5.2 spine-prod: use the standard S3DF installation.** S3DF has a standard,
+centrally maintained copy of spine-prod at:
+```
+/sdf/data/neutrino/software/spine-prod
+```
+**All official productions are run from this installation**, so you don't need your own copy:
+`setup_env.sh` (next steps) uses it automatically. See which version it is at:
+```bash
+git -C /sdf/data/neutrino/software/spine-prod log --oneline -1
+```
+```bash
+cat /sdf/data/neutrino/software/spine-prod/DEFAULT_SPINE_VERSION
+```
+This tutorial was written against commit `cc682a6` (SPINE `1.4.0`). If the standard
+installation has moved on, the commands should still work. If one doesn't, its `README.md`
+and `MIGRATION_*.md` files say what changed.
+
+The standard installation is shared, so you can read it but usually not write to it.
+That's fine: `setup_env.sh` keeps your downloaded weights in your own `$WORKDIR/.cache/weights`,
+and `submit.py` writes its `runs/` folders wherever you run it from (`$WORKDIR`).
+
+<details><summary><b>Only for development: your own clone</b> (click to expand)</summary>
+
+Clone your own copy only if you want to **change** configs or try a different spine-prod
+version. **Never use a personal clone for official productions.**
 ```bash
 cd ~
 git clone https://github.com/DeepLearnPhysics/spine-prod.git
 cd spine-prod
 git checkout cc682a6230f6bf416e8f0f336964a549208cc32f
 ```
-(`git checkout <hash>` freezes the code at that exact version. Later, `git checkout main && git pull` gives you the newest one.)
+(`git checkout <hash>` freezes the code at that exact version; `git checkout main && git pull`
+gives the newest.) Then, in `setup_env.sh` section 1, uncomment
+`export SPINE_PROD_BASEDIR=$HOME/spine-prod`, open a new terminal, and source it again.
+</details>
 
 **5.3 Check the host Python can run spine-prod's `submit.py`:**
 ```bash
@@ -149,6 +176,7 @@ source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
 echo 'source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh' >> ~/.bashrc
 ```
 **What you should see:** a short summary listing `SPINE_TUTORIAL`, `SPINE_PROD_BASEDIR`, the container path, `WORKDIR` and your account.
+The `SPINE_PROD_BASEDIR` line should read `/sdf/data/neutrino/software/spine-prod  (standard S3DF install, used for official productions)`.
 
 > ⚠️ `configure.sh` and `setup_env.sh` need **bash**. S3DF's default shell is bash.
 > If `echo $0` says `zsh` or `tcsh`, type `bash` first.

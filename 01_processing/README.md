@@ -191,6 +191,15 @@ and `output/generic_small_spine_lite.h5`.
 Batch jobs run in the background on nodes Slurm picks, and they survive you logging out.
 **Submit from the neutrino interactive node** (`ssh neutrino`) (not from a compute shell, and not from the Jupyter terminal).
 
+> 📌 **Official productions use the standard spine-prod.** On S3DF the standard, centrally
+> maintained installation is `/sdf/data/neutrino/software/spine-prod`, and **all official
+> productions are run from it**, so everyone's outputs come from the same configs and scripts.
+> After `setup_env.sh`, `$SPINE_PROD_BASEDIR` points there. Check before submitting anything official:
+> ```bash
+> echo $SPINE_PROD_BASEDIR                 # → /sdf/data/neutrino/software/spine-prod
+> ```
+> A personal clone (Part 0, step 5.2) is only for development and testing.
+
 **5.1 Dry run first.** `--dry-run` writes everything but doesn't submit:
 ```bash
 cd $WORKDIR
