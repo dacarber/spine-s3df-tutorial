@@ -31,6 +31,10 @@ PHOTON, ELECTRON, MUON, PION, PROTON, KAON = range(6)
 
 
 def select_interaction(inter):
-    """Return True if `inter` passes the selection, False otherwise."""
-    # TODO(human): implement your selection here (about 5-10 lines).
-    raise NotImplementedError("select_interaction() is not written yet: see selection.py")
+    if not inter.is_fiducial:
+        return False
+
+    for particle in inter.particles:
+        if particle.pid == MUON:
+            return True
+    return False
