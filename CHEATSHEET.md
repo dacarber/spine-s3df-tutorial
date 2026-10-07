@@ -1,6 +1,6 @@
 # SPINE on S3DF — cheat sheet
 
-Assumes `source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh` has been run.
+Assumes `source ~/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh` has been run.
 
 **spine-prod on S3DF:** the standard installation `/sdf/data/neutrino/software/spine-prod`
 (= `$SPINE_PROD_BASEDIR`) is used for **all official productions**. Personal clones are for development only.

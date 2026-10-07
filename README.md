@@ -23,7 +23,7 @@ Keep [`CHEATSHEET.md`](CHEATSHEET.md) open in another tab. It has every command 
 ## What is in this folder
 
 ```
-spine_s3df_tutorial/
+spine-s3df-tutorial/
 ├── README.md                  ← you are here
 ├── CHEATSHEET.md              ← one-page summary of every command
 ├── 00_s3df_basics/

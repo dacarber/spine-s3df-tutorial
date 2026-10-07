@@ -4,7 +4,7 @@
 #
 # SOURCE it (do not run it), so the variables stay in your shell:
 #
-#     source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
+#     source ~/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh
 #
 # You can put that line at the end of your ~/.bashrc so it happens every time
 # you log in. It is safe to source it more than once.

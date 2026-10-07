@@ -24,7 +24,7 @@ TIME=${2:-01:00:00}
 if [[ -z $SPINE_ACCOUNT ]]; then
     echo "ERROR: SPINE_ACCOUNT is not set."
     echo "       Put your account in setup_env.sh, e.g. MY_ACCOUNT=\"neutrino:ml-dev\""
-    echo "       (Part 0 README, step 5.4), then: source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh"
+    echo "       (Part 0 README, step 5.4), then: source ~/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh"
     exit 1
 fi
 

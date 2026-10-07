@@ -112,7 +112,7 @@ To reattach, log in and then `ssh sdfiana012` (your machine's name) instead of `
 
 Do this **on the neutrino interactive node** (`ssh neutrino`), in this order.
 
-**5.1 Put this tutorial on S3DF.** For example, copy it from your laptop. Run this on the laptop, from the folder that contains `spine_s3df_tutorial`:
+**5.1 Put this tutorial on S3DF.** For example, copy it from your laptop. Run this on the laptop, from the folder that contains `spine-s3df-tutorial`:
 ```bash
 git clone https://github.com/dacarber/spine-s3df-tutorial.git
 ```
@@ -183,7 +183,7 @@ If the table is empty, you aren't in a repo yet: see section 1 above ("Get acces
 
 **b) Write it into the script.** Open the file in the `nano` text editor:
 ```bash
-nano ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
+nano ~/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh
 ```
 Near the top you'll find this line (`Ctrl-W`, type `MY_ACCOUNT`, `Enter` jumps to it):
 ```bash
@@ -199,12 +199,12 @@ MY_ACCOUNT="neutrino:ml-dev"
 **c) Load it into your current terminal.** `source` runs the script *inside* your terminal,
 so the variables it sets stay available afterwards:
 ```bash
-source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
+source ~/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh
 ```
 **What you should see** (your username and paths will differ):
 ```
 SPINE tutorial environment
-  SPINE_TUTORIAL       = /sdf/home/j/jdoe/spine_s3df_tutorial
+  SPINE_TUTORIAL       = /sdf/home/j/jdoe/spine-s3df-tutorial
   SPINE_PROD_BASEDIR   = /sdf/data/neutrino/software/spine-prod  (standard S3DF install, used for official productions)
   SPINE_CONTAINER_PATH = /sdf/data/neutrino/images/spine_v1-4-0.sif
   WORKDIR              = /sdf/scratch/users/j/jdoe/spine_tutorial
@@ -215,7 +215,7 @@ If the last line says `<NOT SET …>`, the change in (b) wasn't saved. Open the 
 **d) Make it automatic at every login (run this only once).** `~/.bashrc` is a file of
 commands bash runs every time you open a terminal. This appends one line to the end of it:
 ```bash
-echo 'source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh' >> ~/.bashrc
+echo 'source ~/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh' >> ~/.bashrc
 ```
 > ⚠️ Type **two** `>>` signs: `>>` *adds* to the file, while a single `>` would *erase*
 > everything already in your `~/.bashrc`. Run it once only; running it again adds a duplicate line.
@@ -295,7 +295,7 @@ ls -lh
 Paste this into **Commands to initiate Jupyter**:
 ```bash
 export SPINE_TUTORIAL_QUIET=1
-source $HOME/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
+source $HOME/spine-s3df-tutorial/00_s3df_basics/scripts/setup_env.sh
 export APPTAINER_IMAGE_PATH=$SPINE_CONTAINER_PATH
 export PYTHONNOUSERSITE=1
 function jupyter() { apptainer exec --nv -B /sdf,/fs,/sdf/scratch,/lscratch ${APPTAINER_IMAGE_PATH} jupyter $@; }
@@ -304,7 +304,7 @@ function jupyter() { apptainer exec --nv -B /sdf,/fs,/sdf/scratch,/lscratch ${AP
 *inside the SPINE container* with the GPU and `/sdf` visible.)
 
 4. Click **Launch**. The card says *Queued*, then *Running*. That can take a few minutes on a busy day.
-5. Click **Connect to Jupyter**. In the file browser on the left, go to `spine_s3df_tutorial/` and open
+5. Click **Connect to Jupyter**. In the file browser on the left, go to `spine-s3df-tutorial/` and open
    [`00_check_environment.ipynb`](00_check_environment.ipynb).
 6. Run a cell with **Shift-Enter**. A `[*]` next to a cell means it is still running.
 
