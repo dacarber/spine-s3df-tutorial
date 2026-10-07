@@ -13,13 +13,29 @@
 # e.g.   export WORKDIR=/sdf/data/neutrino/$USER/spine_tutorial
 # ----------------------------------------------------------------------------
 
+# On the S3DF login nodes (s3dflogin) only $HOME is mounted, so there is
+# nothing to set up there: stop quietly. (Matters when this file is sourced
+# from ~/.bashrc, which also runs on the login nodes.)
+if [[ -d /sdf/home && ! -d /sdf/data/neutrino ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+
+# Print the summary only in interactive terminals. Output from ~/.bashrc in
+# non-interactive sessions (scp, rsync, batch jobs) can break those tools.
+if [[ $- != *i* ]]; then
+    SPINE_TUTORIAL_QUIET=1
+fi
+
 # ---- 1. Things YOU may need to change --------------------------------------
 
 # Your Slurm account, written as <facility>:<repo>. Every batch job and
 # interactive compute session is charged to it. Find yours with:
 #     sacctmgr show assoc user=$USER format=Account%40
 # Typical neutrino ML repos: neutrino:ml-dev, neutrino:dune-ml, neutrino:icarus-ml
-export SPINE_ACCOUNT=${SPINE_ACCOUNT:-}
+#
+#   >>> PUT YOUR ACCOUNT BETWEEN THE QUOTES, e.g.  MY_ACCOUNT="neutrino:ml-dev"
+MY_ACCOUNT=""
+export SPINE_ACCOUNT=${SPINE_ACCOUNT:-$MY_ACCOUNT}
 
 # Which spine-prod to use. By default this is the STANDARD S3DF installation,
 #     /sdf/data/neutrino/software/spine-prod
@@ -59,10 +75,10 @@ if [[ -z $SPINE_PROD_CONFIGURED ]]; then
     if [[ -f $SPINE_PROD_BASEDIR/configure.sh ]]; then
         source "$SPINE_PROD_BASEDIR/configure.sh" > /dev/null
     else
-        echo "WARNING: $SPINE_PROD_BASEDIR/configure.sh not found."
-        echo "         On S3DF the standard spine-prod is $SPINE_PROD_OFFICIAL;"
-        echo "         elsewhere, clone spine-prod (00_s3df_basics/README.md, step 5.2)"
-        echo "         or export SPINE_PROD_BASEDIR=/path/to/spine-prod before sourcing."
+        echo "WARNING: $SPINE_PROD_BASEDIR/configure.sh not found." >&2
+        echo "         On S3DF the standard spine-prod is $SPINE_PROD_OFFICIAL;" >&2
+        echo "         elsewhere, clone spine-prod (00_s3df_basics/README.md, step 5.2)" >&2
+        echo "         or export SPINE_PROD_BASEDIR=/path/to/spine-prod before sourcing." >&2
     fi
 fi
 
@@ -74,8 +90,8 @@ if [[ -z $WORKDIR ]]; then
         if [[ -d $SCRATCH ]]; then
             WORKDIR=$SCRATCH/spine_tutorial
         else
-            echo "WARNING: $SCRATCH does not exist; using \$HOME/spine_tutorial_work."
-            echo "         Ask on #comp-sdf for your scratch area and set WORKDIR."
+            echo "WARNING: $SCRATCH does not exist; using \$HOME/spine_tutorial_work." >&2
+            echo "         Ask on #comp-sdf for your scratch area and set WORKDIR." >&2
             WORKDIR=$HOME/spine_tutorial_work
         fi
     else
@@ -135,5 +151,9 @@ if [[ -z $SPINE_TUTORIAL_QUIET ]]; then
     fi
     echo "  SPINE_CONTAINER_PATH = ${SPINE_CONTAINER_PATH:-<not set>}"
     echo "  WORKDIR              = $WORKDIR"
-    echo "  SPINE_ACCOUNT        = ${SPINE_ACCOUNT:-<NOT SET -- edit setup_env.sh or export it>}"
+    if [[ -n $SPINE_ACCOUNT ]]; then
+        echo "  SPINE_ACCOUNT        = $SPINE_ACCOUNT"
+    else
+        echo '  SPINE_ACCOUNT        = <NOT SET: put it in MY_ACCOUNT="..." in setup_env.sh (Part 0, step 5.4)>'
+    fi
 fi

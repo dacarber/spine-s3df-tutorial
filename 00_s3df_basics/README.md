@@ -165,21 +165,75 @@ If that prints an error instead of `OK`: `python3 -m pip install --user jinja2 p
 > `submit.py` will make your batch jobs run *that* copy instead of the container's.
 > Keep any personal SPINE environment deactivated when submitting.
 
-**5.4 Tell the tutorial your account.** Open the setup script and fill in `SPINE_ACCOUNT`:
+**5.4 Set up the tutorial's environment (your account, once).**
+
+The tutorial's commands use a few *environment variables*: your Slurm account, where
+spine-prod is, where to put big files, and so on. They are all set by one script,
+`setup_env.sh`. The only thing it can't guess is **your Slurm account**, so you write that
+into the script once. After that, a single line in `~/.bashrc` sets everything up automatically
+every time you log in.
+
+**a) Find your account name.** Run:
+```bash
+sacctmgr show assoc user=$USER format=Account%40
+```
+You get a short table. The `Account` column lists the accounts you may use, written
+`facility:repo`, such as `neutrino:ml-dev`. Pick the one your group told you to use.
+If the table is empty, you aren't in a repo yet: see section 1 above ("Get access", item 3).
+
+**b) Write it into the script.** Open the file in the `nano` text editor:
 ```bash
 nano ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
-#   export SPINE_ACCOUNT=${SPINE_ACCOUNT:-neutrino:ml-dev}     <- your account here
 ```
-Then load it, and make it load automatically at every login:
+Near the top you'll find this line (`Ctrl-W`, type `MY_ACCOUNT`, `Enter` jumps to it):
+```bash
+MY_ACCOUNT=""
+```
+Move the cursor between the two quotes with the arrow keys and type your account, so the line reads:
+```bash
+MY_ACCOUNT="neutrino:ml-dev"
+```
+(Use your own account if it is different.) Save with `Ctrl-O` then `Enter`, and quit with
+`Ctrl-X`. That's the only line you need to change.
+
+**c) Load it into your current terminal.** `source` runs the script *inside* your terminal,
+so the variables it sets stay available afterwards:
 ```bash
 source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh
+```
+**What you should see** (your username and paths will differ):
+```
+SPINE tutorial environment
+  SPINE_TUTORIAL       = /sdf/home/j/jdoe/spine_s3df_tutorial
+  SPINE_PROD_BASEDIR   = /sdf/data/neutrino/software/spine-prod  (standard S3DF install, used for official productions)
+  SPINE_CONTAINER_PATH = /sdf/data/neutrino/images/spine_v1-4-0.sif
+  WORKDIR              = /sdf/scratch/users/j/jdoe/spine_tutorial
+  SPINE_ACCOUNT        = neutrino:ml-dev
+```
+If the last line says `<NOT SET …>`, the change in (b) wasn't saved. Open the file again and check.
+
+**d) Make it automatic at every login (run this only once).** `~/.bashrc` is a file of
+commands bash runs every time you open a terminal. This appends one line to the end of it:
+```bash
 echo 'source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh' >> ~/.bashrc
 ```
-**What you should see:** a short summary listing `SPINE_TUTORIAL`, `SPINE_PROD_BASEDIR`, the container path, `WORKDIR` and your account.
-The `SPINE_PROD_BASEDIR` line should read `/sdf/data/neutrino/software/spine-prod  (standard S3DF install, used for official productions)`.
+> ⚠️ Type **two** `>>` signs: `>>` *adds* to the file, while a single `>` would *erase*
+> everything already in your `~/.bashrc`. Run it once only; running it again adds a duplicate line.
 
-> ⚠️ `configure.sh` and `setup_env.sh` need **bash**. S3DF's default shell is bash.
-> If `echo $0` says `zsh` or `tcsh`, type `bash` first.
+**e) Check.** Log out (`exit`) and `ssh neutrino` again. The summary from (c) now appears
+by itself at every login, and:
+```bash
+echo $SPINE_ACCOUNT
+```
+prints your account. Done: from now on, every command in this tutorial knows your settings.
+(If nothing appears at login, your `~/.bash_profile` probably doesn't read `~/.bashrc`.
+Run the same `echo '…' >> …` command once more with `~/.bash_profile` in place of `~/.bashrc`.)
+
+> ⚠️ These scripts need the **bash** shell. S3DF's default shell is bash. If `echo $0`
+> says `zsh` or `tcsh`, type `bash` first.
+>
+> 💡 Want a quieter login? Put `export SPINE_TUTORIAL_QUIET=1` on a line **above** the
+> `source …setup_env.sh` line in `~/.bashrc` to hide the summary. The settings still load.
 
 **5.5 Check the SPINE container exists:**
 ```bash
