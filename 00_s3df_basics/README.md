@@ -45,19 +45,21 @@ approve the Duo push. You are now on a **login node**. It is only a doorway:
 hop straight to an **interactive node**:
 
 ```bash
-ssh iana
+ssh neutrino
 ```
 
-Your prompt changes to something like `[jdoe@sdfiana012 ~]$`. **iana** is where you
-edit files, use git, and submit jobs. It has **no GPUs**, so don't run SPINE here.
+`neutrino` is the interactive pool for the Neutrino facility. It sends you to one of S3DF's
+shared interactive machines, so your prompt changes to something like `[jdoe@sdfiana012 ~]$`.
+The `sdfiana…` part is just the machine's name. This **neutrino** interactive node is where
+you edit files, use git, and submit jobs. It has **no GPUs**, so don't run SPINE here.
 
-> 💡 **Shortcut.** On your laptop, add this to `~/.ssh/config`, then `ssh iana` takes you straight there:
+> 💡 **Shortcut.** On your laptop, add this to `~/.ssh/config`, then `ssh neutrino` takes you straight there:
 > ```
 > Host s3dflogin
 >     HostName s3dflogin.slac.stanford.edu
 >     User jdoe
-> Host iana
->     HostName iana
+> Host neutrino
+>     HostName neutrino
 >     User jdoe
 >     ProxyJump s3dflogin
 > ```
@@ -90,7 +92,9 @@ variables (`$WORKDIR`, `$SPINE_ACCOUNT`, …) in `setup_env.sh`.
 - `Ctrl-B` then `D` detaches from it;
 - `tmux attach -t spine` reconnects later.
 
-Note the iana node name (e.g. `sdfiana012`). To reattach you must `ssh` to that same node.
+Note the machine name in your prompt (e.g. `sdfiana012`). `ssh neutrino` may land you on a
+different machine next time, and a tmux session lives on the machine where you started it.
+To reattach, log in and then `ssh sdfiana012` (your machine's name) instead of `ssh neutrino`.
 
 ## 4. Where to keep files
 
@@ -106,7 +110,7 @@ Note the iana node name (e.g. `sdfiana012`). To reattach you must `ssh` to that 
 
 ## 5. One-time setup
 
-Do this **on iana**, in this order.
+Do this **on the neutrino interactive node** (`ssh neutrino`), in this order.
 
 **5.1 Put this tutorial on S3DF.** For example, copy it from your laptop. Run this on the laptop, from the folder that contains `spine_s3df_tutorial`:
 ```bash
@@ -130,7 +134,7 @@ python3 -c "import jinja2, yaml" && echo OK
 ```
 If that prints an error instead of `OK`: `python3 -m pip install --user jinja2 pyyaml`.
 
-> ⚠️ **Do not `pip install spine` on iana.** If `which spine` prints a path on the host,
+> ⚠️ **Do not `pip install spine` on the neutrino node.** If `which spine` prints a path on the host,
 > `submit.py` will make your batch jobs run *that* copy instead of the container's.
 > Keep any personal SPINE environment deactivated when submitting.
 
@@ -227,13 +231,13 @@ function jupyter() { apptainer exec --nv -B /sdf,/fs,/sdf/scratch,/lscratch ${AP
 > (try `turing`), or the container path doesn't exist (step 5.5).
 >
 > ⚠️ **The Jupyter terminal is inside the container.** It's fine for `spine …` commands, but
-> `sbatch`/`squeue` don't exist there. Submit batch jobs from an `ssh` terminal on iana.
+> `sbatch`/`squeue` don't exist there. Submit batch jobs from an `ssh neutrino` terminal.
 >
 > ⚠️ **The session ends when its hours run out**, and anything still running is killed. Save often.
 
 ## Path B — the terminal
 
-From iana (inside `tmux`, ideally):
+From the neutrino node (inside `tmux`, ideally):
 
 ```bash
 compute_shell.sh                 # ask Slurm for 1 GPU on 'ampere' for 1 hour
@@ -252,7 +256,7 @@ Other sizes: `compute_shell.sh ampere 02:00:00` (2 hours), `compute_shell.sh tur
 (cheaper GPU), `compute_shell.sh milano` (CPU only, for analysis).
 
 > ⚠️ **Lost connection = lost session.** An `srun` shell dies if your SSH connection drops.
-> Use `tmux` on iana, or for anything longer than ~1 hour, submit a batch job (Part 1, step 4).
+> Use `tmux` on the neutrino node, or for anything longer than ~1 hour, submit a batch job (Part 1, step 4).
 >
 > ⚠️ **Don't leave idle compute shells open.** They block a GPU someone else could use, and they count against your group's allocation.
 

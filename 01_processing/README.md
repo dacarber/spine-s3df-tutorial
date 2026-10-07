@@ -189,7 +189,7 @@ and `output/generic_small_spine_lite.h5`.
 ## 5. Way C — batch jobs with Slurm
 
 Batch jobs run in the background on nodes Slurm picks, and they survive you logging out.
-**Submit from iana** (not from a compute shell, and not from the Jupyter terminal).
+**Submit from the neutrino interactive node** (`ssh neutrino`) (not from a compute shell, and not from the Jupyter terminal).
 
 **5.1 Dry run first.** `--dry-run` writes everything but doesn't submit:
 ```bash
@@ -292,7 +292,7 @@ file, interactively: `spine_container.sh spine -c infer/common/litify.yaml -s fu
 | `No such file or directory` for an `/sdf/...` input in `-I` mode | add `--bind-paths /sdf` |
 | `Permission denied` writing output | you didn't give `--output-dir`/`-o`, so SPINE tried to write beside a read-only input |
 | `GPUs requested (1) exceeds … visible devices (0)` | you are not on a GPU node. Run `compute_shell.sh` first, or use `--world-size 0` for CPU |
-| `sbatch: command not found` | you're in the Jupyter terminal (inside the container). Submit from iana. |
+| `sbatch: command not found` | you're in the Jupyter terminal (inside the container). Submit from the neutrino node (`ssh neutrino`). |
 | home directory full | `runs/` created in `$HOME`. `cd $WORKDIR` before `submit.py`. |
 | numba / OpenBLAS thread errors | `NUMBA_NUM_THREADS` too high. `setup_env.sh` caps it at 64. |
 | `--set` value rejected by `submit.py` | no spaces or quotes allowed: `--set io.loader.batch_size=8` |

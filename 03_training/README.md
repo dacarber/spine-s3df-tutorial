@@ -147,7 +147,7 @@ spine_container.sh spine -c $SPINE_TUTORIAL/configs/uresnet_ppn_validation.yaml 
 
 Training takes hours to days, so it always runs as a batch job. spine-prod manages a
 **run directory** that keeps checkpoints, logs and job records together across restarts.
-From iana:
+From the neutrino node (`ssh neutrino`):
 ```bash
 cd $WORKDIR
 $SPINE_PROD_BASEDIR/submit.py \

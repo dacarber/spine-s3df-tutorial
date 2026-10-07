@@ -2,7 +2,7 @@
 # ----------------------------------------------------------------------------
 # compute_shell.sh -- open an interactive shell ON A COMPUTE NODE.
 #
-# The login/interactive nodes (s3dflogin, iana) have no GPUs and are shared by
+# The login/interactive nodes (s3dflogin, neutrino) have no GPUs and are shared by
 # everyone. Real work (running SPINE, training) must happen on a compute node,
 # which you borrow from Slurm for a limited time.
 #

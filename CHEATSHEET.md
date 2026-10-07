@@ -5,7 +5,7 @@ Assumes `source ~/spine_s3df_tutorial/00_s3df_basics/scripts/setup_env.sh` has b
 ## Getting around S3DF
 ```bash
 ssh <user>@s3dflogin.slac.stanford.edu     # login node (doorway only)
-ssh iana                                    # interactive node: edit, git, submit jobs (no GPU)
+ssh neutrino                                # interactive node: edit, git, submit jobs (no GPU)
 tmux new -s spine  /  Ctrl-B D  /  tmux attach -t spine    # survive disconnects
 df -h ~        du -sh $WORKDIR              # disk usage (home is only 30 GB)
 sacctmgr show assoc user=$USER format=Account%40           # which Slurm accounts can I use?
@@ -53,7 +53,7 @@ spine_container.sh spine -c $SPINE_TUTORIAL/configs/generic_full_chain_lite.yaml
 # spine-prod, interactive (production recipe, in your shell)
 $SPINE_PROD_BASEDIR/submit.py -I --config infer/generic/latest [--apply-mods lite] \
     --source /abs/path/IN.root --bind-paths /sdf --output-suffix spine
-# spine-prod, batch (from iana) -- ALWAYS pass -A
+# spine-prod, batch (from the neutrino node) -- ALWAYS pass -A
 $SPINE_PROD_BASEDIR/submit.py --config infer/protodune-sp/latest [--apply-mods lite|data|data lite] \
     --source-list files.txt [--files-per-task 2] -A $SPINE_ACCOUNT --time 01:00:00 [--dry-run]
 $SPINE_PROD_BASEDIR/submit.py --list-mods infer/protodune-sp/full_chain_260906.yaml
@@ -118,7 +118,7 @@ spine -c model/<det>/full_chain/model_<date>.yaml --world-size 0 --module-weight
 | `Permission denied` writing output | give `--output-dir`/`-o` |
 | home directory full | `cd $WORKDIR` before `submit.py`; keep data out of `$HOME` |
 | `GPUs requested … exceeds … visible devices` | get a GPU (`compute_shell.sh`) or `--world-size 0` |
-| `sbatch: command not found` | you're in the Jupyter terminal (container). Submit from iana |
+| `sbatch: command not found` | you're in the Jupyter terminal (container). Submit from the neutrino node (`ssh neutrino`) |
 | `KeyError: 'data_tensor'` reading `.h5` | lite file: use the `_lite` reader config / `--set build.lite=true` |
 | `Cannot specify both save_step and save_epoch` | `--set train.save_epoch=null` |
 | `-n` confusion | `spine -n` = number of events; `submit.py -n` = number of tasks |

@@ -31,7 +31,7 @@ No GPU is needed: nothing here runs a neural network.
 ## Terminal recipes
 
 All commands run inside the container (`spine_container.sh …`). CPU is fine, so you can
-even run them on iana for small files, or on a `compute_shell.sh milano` node.
+even run them on the neutrino node for small files, or on a `compute_shell.sh milano` node.
 
 **What's inside a LArCV file?**
 ```bash
@@ -71,7 +71,7 @@ ls $WORKDIR/ana    # save_reco_particles.csv  save_reco_interactions.csv  save_t
 ```
 For lite files, add `--set build.lite=true`.
 
-**Export a whole production to CSV as a batch job** (CPU nodes; from iana):
+**Export a whole production to CSV as a batch job** (CPU nodes; from the neutrino node):
 ```bash
 cd $WORKDIR
 $SPINE_PROD_BASEDIR/submit.py \

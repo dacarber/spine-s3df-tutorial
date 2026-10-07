@@ -74,7 +74,7 @@ same commands, and each section's `README.md` is written for the terminal.
 |---|---|
 | **S3DF** | SLAC Shared Scientific Data Facility: the computing cluster we run on. |
 | **Login node** (`s3dflogin`) | The machine you first `ssh` into. Only for hopping to other machines. Never run anything heavy here. |
-| **Interactive node** (`iana`) | A shared machine for editing files, `git`, and submitting jobs. **No GPUs.** |
+| **Interactive node** (`ssh neutrino`) | A shared machine for editing files, `git`, and submitting jobs. **No GPUs.** |
 | **Compute node** | A machine with GPUs or many CPUs that Slurm lends you for a limited time. |
 | **Slurm** | The *scheduler*: you ask it for resources and it runs your work when they are free. |
 | **Job** | One request to Slurm: either an *interactive* shell (`srun`) or a *batch* script (`sbatch`). |
